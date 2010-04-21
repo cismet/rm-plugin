@@ -87,7 +87,7 @@ public class RMPlugin implements PluginSupport,RMessenger {
      * The default postfix for rmi binding which indicates that this object is an 
      * RMPlugin
      */
-    public static final String RMI_OBJECT_NAME = "RMPlugin";
+    public static final String RMI_OBJECT_NAME = "RMPlugin";//NOI18N
     /**
      * Constant for the textual replacing of the value -1 which indicates that a port
      * is not initialized. This presentation is a question of style and should enhance 
@@ -118,38 +118,38 @@ public class RMPlugin implements PluginSupport,RMessenger {
     public RMPlugin(PluginContext context) {
         isPlugin = true;
         this.context = context;
-        log.debug("new RMPlugin");
+        log.debug("new RMPlugin");//NOI18N
         try {            
-            if(context!=null&&context.getEnvironment()!=null&&this.context.getEnvironment().isProgressObservable())this.context.getEnvironment().getProgressObserver().setProgress(0, java.util.ResourceBundle.getBundle("de/cismet/rmplugin/resource/language").getString("RMPlugin.initialisieren"));
+            if(context!=null&&context.getEnvironment()!=null&&this.context.getEnvironment().isProgressObservable())this.context.getEnvironment().getProgressObserver().setProgress(0, org.openide.util.NbBundle.getMessage(RMPlugin.class, "RMPlugin.RMPlugin(PluginContext).message"));//NOI18N
         } catch (InterruptedException ex) {
-            log.error("Fehler beim setzen der Progressbar",ex);
+            log.error("Error while setting the progress bar",ex);//NOI18N
         }
         
         try {
-            defaultPort = Integer.parseInt(context.getEnvironment().getParameter("DefaultPort"));
+            defaultPort = Integer.parseInt(context.getEnvironment().getParameter("DefaultPort"));//NOI18N
         } catch(NumberFormatException e){
-            log.warn("Kein Wert oder kein g\u00FCltiger Wert f\u00FCr Default Port vorhanden",e);            
+            log.warn("No value or no valid value for Default Port available",e);//NOI18N
         }
         
         try {
-            alternativePort = Integer.parseInt(context.getEnvironment().getParameter("AltPort"));
+            alternativePort = Integer.parseInt(context.getEnvironment().getParameter("AltPort"));//NOI18N
         } catch(NumberFormatException ex){
-            log.debug("Kein Wert oder kein g\u00FCltiger Wert f\u00FCr alternativen Port vorhanden",ex);
+            log.debug("No value or no valid value for alternative port available",ex);//NOI18N
             
         }
         
-        rmRegistryPath = context.getEnvironment().getParameter("RMRegistryServer");
+        rmRegistryPath = context.getEnvironment().getParameter("RMRegistryServer");//NOI18N
         User user = Sirius.navigator.connection.SessionManager.getSession().getUser();
-        key = user.getName()+"@"+user.getUserGroup().toString();
+        key = user.getName()+"@"+user.getUserGroup().toString();//NOI18N
         
-        log.debug("defaultPort:"+defaultPort);
-        log.debug("alternativePort:"+alternativePort);
-        log.debug("path to rmRegistry:"+rmRegistryPath);
+        log.debug("defaultPort:"+defaultPort);//NOI18N
+        log.debug("alternativePort:"+alternativePort);//NOI18N
+        log.debug("path to rmRegistry:"+rmRegistryPath);//NOI18N
         
         try {            
             rmiObject = (RMessenger)UnicastRemoteObject.exportObject(this);            
         } catch (RemoteException ex) {
-            log.fatal("Schwerer Fehler beim initialiseren des RMPlugins --> Fehler beim Exportieren des Remote Objekts");
+            log.fatal("Fatal error while initializing the RMPlugin --> Error during exporting the remote object");//NOI18N
         }
         initRMI();               
     }
@@ -161,15 +161,15 @@ public class RMPlugin implements PluginSupport,RMessenger {
         this.rmRegistryPath = registryPath;        
         key = userString;
         
-        log.debug("defaultPort:"+defaultPort);
-        log.debug("alternativePort:"+alternativePort);
-        log.debug("path to rmRegistry:"+rmRegistryPath);
-        log.debug("key:"+key);
+        log.debug("defaultPort:"+defaultPort);//NOI18N
+        log.debug("alternativePort:"+alternativePort);//NOI18N
+        log.debug("path to rmRegistry:"+rmRegistryPath);//NOI18N
+        log.debug("key:"+key);//NOI18N
         
         try {            
             rmiObject = (RMessenger)UnicastRemoteObject.exportObject(this);            
         } catch (RemoteException ex) {
-            log.fatal("Schwerer Fehler beim initialiseren des RMPlugins --> Fehler beim Exportieren des Remote Objekts");
+            log.fatal("Fatal error while initializing the RMPlugins --> Error while exporting the remote object");//NOI18N
         }
         initRMI();               
     }
@@ -179,52 +179,52 @@ public class RMPlugin implements PluginSupport,RMessenger {
     private void initRMI(){
         regExists = false;
         if(defaultPort==NOT_INITIALIZED && alternativePort==NOT_INITIALIZED){
-            log.error("RMI konnte nicht initialisiert werden da kein Portangabe f\u00FCr die Registry vorhanden ist");
+            log.error("RMI could not be initialized, because because the port value of the registry is not existent.");//NOI18N
             return;
         }
         
         try {                        
             
-            if(context!=null&&context.getEnvironment()!=null&&this.context.getEnvironment().isProgressObservable())this.context.getEnvironment().getProgressObserver().setProgress(500, java.util.ResourceBundle.getBundle("de/cismet/rmplugin/resource/language").getString("RMPlugin.registry"));
+            if(context!=null&&context.getEnvironment()!=null&&this.context.getEnvironment().isProgressObservable())this.context.getEnvironment().getProgressObserver().setProgress(500, org.openide.util.NbBundle.getMessage(RMPlugin.class, "RMPlugin.initRMI().SearchForRegistry"));//NOI18N
             if((regExists=initRegestry())){
-                bindString = key+"_"+RMI_OBJECT_NAME+"_"+InetAddress.getLocalHost().getHostAddress();
-                log.debug("Versuche RMPlugin mit dem Namen "+bindString+" zu binden");
-                if(context!=null&&context.getEnvironment()!=null&&this.context.getEnvironment().isProgressObservable())this.context.getEnvironment().getProgressObserver().setProgress(750, java.util.ResourceBundle.getBundle("de/cismet/rmplugin/resource/language").getString("RMPlugin.bind"));
+                bindString = key+"_"+RMI_OBJECT_NAME+"_"+InetAddress.getLocalHost().getHostAddress();//NOI18N
+                log.debug("Try to bind RMPlugin with the name " + bindString);//NOI18N
+                if(context!=null&&context.getEnvironment()!=null&&this.context.getEnvironment().isProgressObservable())this.context.getEnvironment().getProgressObserver().setProgress(750, org.openide.util.NbBundle.getMessage(RMPlugin.class, "RMPlugin.initRMI().bind"));//NOI18N
                 reg.rebind(bindString,rmiObject);
-                log.debug("Binden erfolgreich");
+                log.debug("successfully bound");////NOI18N
                 if(rmRegistryPath != null){
                     try{
-                        log.debug("Versuche RMI Objekt "+bindString+" in RMRegistry einzuf\u00FCgen");
-                        if(context!=null&&context.getEnvironment()!=null&&this.context.getEnvironment().isProgressObservable())this.context.getEnvironment().getProgressObserver().setProgress(900, java.util.ResourceBundle.getBundle("de/cismet/rmplugin/resource/language").getString("RMPlugin.register"));
+                        log.debug("Try to add RMI Objekt "+bindString+" to RMRegistry");//NOI18N
+                        if(context!=null&&context.getEnvironment()!=null&&this.context.getEnvironment().isProgressObservable())this.context.getEnvironment().getProgressObserver().setProgress(900, org.openide.util.NbBundle.getMessage(RMPlugin.class, "RMPlugin.initRMI().register"));//NOI18N
                         rmRegistry = (RMRegistry) Naming.lookup(rmRegistryPath);
                         User user = Sirius.navigator.connection.SessionManager.getSession().getUser();
                         InetAddress ip = InetAddress.getLocalHost();
-                        rmInfo = new RMInfo(user.getName(),user.getUserGroup().getName(),user.getDomain(),usedPort,System.currentTimeMillis(),ip,new URI("rmi://"+ip.getHostAddress()+":"+usedPort+"/"+bindString));
+                        rmInfo = new RMInfo(user.getName(),user.getUserGroup().getName(),user.getDomain(),usedPort,System.currentTimeMillis(),ip,new URI("rmi://"+ip.getHostAddress()+":"+usedPort+"/"+bindString));//NOI18N
                         rmRegistry.register(rmInfo);
-                        log.debug("Einf\u00FCgen von Objekt "+bindString+" erfolgreich");
+                        log.debug("Object "+bindString+" successfully added");//NOI18N
                     } catch(NotBoundException ex){
-                        log.error("NotBoundException beim einf\u00FCgen von Objekt "+bindString+" in RMRegistry",ex);
+                        log.error("NotBoundException while adding the object "+bindString+" to RMRegistry",ex);//NOI18N
                     } catch(RemoteException ex){
-                        log.error("RemoteException beim einf\u00FCgen von Objekt "+bindString+" in RMRegistry",ex);
+                        log.error("RemoteException while adding the object "+bindString+" to RMRegistry",ex);//NOI18N
                     }catch(MalformedURLException ex){
-                        log.error("MalformendURLException beim einf\u00FCgen von Objekt "+bindString+" in RMRegistry --> falscher Pfad zur Registry",ex);
+                        log.error("MalformendURLException while adding the object "+bindString+" to RMRegistry --> wrong path to the resgistry",ex);//NOI18N
                     }
                 } else {
-                    if(context!=null&&context.getEnvironment()!=null&&this.context.getEnvironment().isProgressObservable())this.context.getEnvironment().getProgressObserver().setProgress(1000, java.util.ResourceBundle.getBundle("de/cismet/rmplugin/resource/language").getString("RMPlugin.error"));
-                    log.error("Kein Pfad zur RMRegistry vorhanden");
+                    if(context!=null&&context.getEnvironment()!=null&&this.context.getEnvironment().isProgressObservable())this.context.getEnvironment().getProgressObserver().setProgress(1000, org.openide.util.NbBundle.getMessage(RMPlugin.class, "RMPlugin.initRMI().error"));//NOI18N
+                    log.error("no path to RMRegistry available");//NOI18N
                 }
             } else {
-                if(context!=null&&context.getEnvironment()!=null&&this.context.getEnvironment().isProgressObservable())this.context.getEnvironment().getProgressObserver().setProgress(1000, java.util.ResourceBundle.getBundle("de/cismet/rmplugin/resource/language").getString("RMPlugin.error"));
-                throw new Exception("Fehler beim initalisieren der Regestry");
+                if(context!=null&&context.getEnvironment()!=null&&this.context.getEnvironment().isProgressObservable())this.context.getEnvironment().getProgressObserver().setProgress(1000, org.openide.util.NbBundle.getMessage(RMPlugin.class, "RMPlugin.initRMI().error"));//NOI18N
+                throw new Exception("Error while initialising the Regestry");//NOI18N
             }
-            if(context!=null&&context.getEnvironment()!=null&&this.context.getEnvironment().isProgressObservable())this.context.getEnvironment().getProgressObserver().setProgress(1000, java.util.ResourceBundle.getBundle("de/cismet/rmplugin/resource/language").getString("RMPlugin.ready"));
+            if(context!=null&&context.getEnvironment()!=null&&this.context.getEnvironment().isProgressObservable())this.context.getEnvironment().getProgressObserver().setProgress(1000, org.openide.util.NbBundle.getMessage(RMPlugin.class, "RMPlugin.initRMI().ready"));//NOI18N
         }catch(Exception e) {
-            log.error("Error beim initialisieren der RMI Verbindungen:"+e);
+            log.error("Error while initialising the RMI connection:"+e);//NOI18N
             bindString = null;
             try {
-                if(context!=null&&context.getEnvironment()!=null&&this.context.getEnvironment().isProgressObservable())this.context.getEnvironment().getProgressObserver().setProgress(1000, java.util.ResourceBundle.getBundle("de/cismet/rmplugin/resource/language").getString("RMPlugin.error"));
+                if(context!=null&&context.getEnvironment()!=null&&this.context.getEnvironment().isProgressObservable())this.context.getEnvironment().getProgressObserver().setProgress(1000, org.openide.util.NbBundle.getMessage(RMPlugin.class, "RMPlugin.initRMI().error"));//NOI18N
             } catch (InterruptedException ex) {
-                log.error("Fehler beim setzen der Progressbar",ex);
+                log.error("Error while setting the progress bar",ex);//NOI18N
             }
         }        
     }
@@ -232,25 +232,25 @@ public class RMPlugin implements PluginSupport,RMessenger {
     private void shutdownRMI(){
         if(bindString != null && regExists){
             try{
-                log.debug("Versuche "+bindString+" zu unbinden");
+                log.debug("try to unbind "+bindString);//NOI18N
                 reg.unbind(bindString);
-                log.debug(bindString+"erfolgreich aus der Registry ausgetragen");
+                log.debug(bindString+" successfully unbound from the registry");//NOI18N
                 if(rmRegistry != null){
                     try{
-                        log.debug("Versuche RMI Objekt "+bindString+" aus RMRegistry auszutragen");
+                        log.debug("Try to unbind RMI object "+bindString+" from RMRegistry");//NOI18N
                         rmRegistry.deregister(rmInfo);
-                        log.debug("Austragen von Objekt "+bindString+" erfolgreich");
+                        log.debug("object "+bindString+" successfully unbound");//NOI18N
                     } catch(Exception ex){
-                        log.error("Fehler beim austragen des Objekts "+bindString+" aus der RMRegistry",ex);
+                        log.error("Error while unbinding the object "+bindString+" from RMRegistry",ex);//NOI18N
                     }
                 } else {
-                    log.error("Kein RMRegistry Objekt vorhanden austragen nicht m\u00F6glich");
+                    log.error("No RMRegistry object existent. Unbind is not possible");//NOI18N
                 }
             }catch(Exception ex){
-                log.error("Fehler w\u00E4hrend dem unbind des Objekts "+bindString,ex);
+                log.error("Error while unbinding the object "+bindString,ex);//NOI18N
             }
         } else {
-            log.debug("Gibt kein RMI Objekt/Registry zum unbinden");
+            log.debug("No RMI Objekt/Registry to unbind existent");//NOI18N
         }
     }
     
@@ -260,8 +260,8 @@ public class RMPlugin implements PluginSupport,RMessenger {
             usedPort=defaultPort;
             try {
                 reg = LocateRegistry.getRegistry(defaultPort);
-                log.debug("Lokale Registry auf Port "+defaultPort+" vorhanden");
-                log.debug("Pr\u00FCfe ob die registry "+RMI_OBJECT_NAME+" Objekte enth\u00E4lt");
+                log.debug("Local registry on port "+defaultPort+" available");//NOI18N
+                log.debug("Check if the registry contains "+RMI_OBJECT_NAME+" objects");//NOI18N
                 String[] bindedObjects = reg.list();
                 int size = bindedObjects.length;
                 int i=0;
@@ -275,29 +275,29 @@ public class RMPlugin implements PluginSupport,RMessenger {
                 }
                 
                 if(isRMPluginRegistry){
-                    log.debug("Registry "+defaultPort+" enth\u00E4lt "+RMI_OBJECT_NAME+" Objekte");
+                    log.debug("Registry "+defaultPort+" contains "+RMI_OBJECT_NAME+" objects");//NOI18N
                     return true;
                 } else {
-                    log.debug("Registry "+defaultPort+" enth\u00E4lt keine"+RMI_OBJECT_NAME+" Objekte --> versuche alternative Registry");
+                    log.debug("Registry "+defaultPort+" contains no "+RMI_OBJECT_NAME+" objects --> try alternative Registry");//NOI18N
                     if (alternativePort!=NOT_INITIALIZED){
                         return initAlternativRegistry();
                     } else {
-                        log.debug("Kein Port f\u00FCr Alternative Registry vorhanden");
+                        log.debug("No port for alternative registry existent");//NOI18N
                         return false;
                     }
                 }
             }catch(RemoteException e){
-                log.debug("Keine lokale Registry vorhanden --> erstelle Registry");
+                log.debug("No local registry existent --> create registry");//NOI18N
                 try {
                     reg = LocateRegistry.createRegistry(defaultPort);
-                    log.debug("Anlegen der Registry auf Port "+defaultPort+" erfolgreich");
+                    log.debug("Successfully created the registry on port "+defaultPort);//NOI18N
                     return true;
                 } catch(RemoteException ex){
-                    log.debug("Anlegen der Registry auf Port "+defaultPort+" schlug fehl");
+                    log.debug("The creation of the registry on port "+defaultPort+" failed");//NOI18N
                     if (alternativePort!=NOT_INITIALIZED){
                         return initAlternativRegistry();
                     } else {
-                        log.debug("Kein Port f\u00FCr Alternative Registry vorhanden");
+                        log.debug("No port for alternative registry available");//NOI18N
                         return false;
                     }
                 }
@@ -307,22 +307,22 @@ public class RMPlugin implements PluginSupport,RMessenger {
         } else if(alternativePort!=NOT_INITIALIZED){
             return initAlternativRegistry();
         }
-        log.debug("Fehler in initRegistry Ablauf d\u00FCrfte nicht passieren :-)");
+        log.debug("Error in initRegistry. This should not happen :-)");//NOI18N
         return false;
     }
     
     private boolean initAlternativRegistry(){
-        log.debug("Initalisierung der alternativen Regestry");
+        log.debug("Initialization of the alternative Regestry");//NOI18N
         usedPort=alternativePort;
         
         try {
             reg = LocateRegistry.getRegistry(alternativePort);
-            log.debug("Lokale Registry auf Port "+alternativePort+" vorhanden");
-            log.debug("Pr\u00FCfe ob die registry "+RMI_OBJECT_NAME+" Objekte enth\u00E4lt");
+            log.debug("Local registry on port "+alternativePort+" available");//NOI18N
+            log.debug("Check if the registry contains "+RMI_OBJECT_NAME+" objects");//NOI18N
             String[] bindedObjects = reg.list();
             int size = bindedObjects.length;
             if(size == 0){
-                log.debug("Ausweich Registry leer");
+                log.debug("Alternative Registry is empty");//NOI18N
                 return true;
             }
             int i=0;
@@ -336,21 +336,21 @@ public class RMPlugin implements PluginSupport,RMessenger {
             }
             
             if(isRMPluginRegistry){
-                log.debug("Ausweich Registry enth\u00E4lt Objekte vom Typ "+RMI_OBJECT_NAME);
+                log.debug("Alternative registry contains objects of the type "+RMI_OBJECT_NAME);//NOI18N
                 return true;
             } else {
-                log.debug("Ausweich Registry auch nicht geeignet");
+                log.debug("Alternative registry is also improper");//NOI18N
                 return false;
             }
             
         }catch(RemoteException e){
-            log.debug("Keine lokale Registry vorhanden oder kein Zugriff --> erstelle Registry",e);
+            log.debug("No local registry exists or no access on it --> create Registry",e);//NOI18N
             try {
                 reg = LocateRegistry.createRegistry(alternativePort);
-                log.debug("Anlegen der Registry auf Port "+alternativePort+" erfolgreich");
+                log.debug("Creation of a registry on port "+alternativePort+" successful");//NOI18N
                 return true;
             } catch(RemoteException ex){
-                log.debug("Anlegen der Registry auf Port "+alternativePort+" schlug fehl");
+                log.debug("Creation of a registry on port "+alternativePort+" failed");//NOI18N
                 return false;
             }
             
@@ -381,12 +381,12 @@ public class RMPlugin implements PluginSupport,RMessenger {
     //aktivieren deactivieren --> au\u00DFen vor noch denke brauche ich
     public void setActive(boolean active) {
         if(active && !initActivation ){
-            log.debug("RMPlugin wird aktiviert");            
+            log.debug("RMPlugin will be activated");//NOI18N
             initRMI();
             
         } else if(!active){        
             initActivation=false;
-            log.debug("RMPlugin wird deaktiviert");
+            log.debug("RMPlugin will be deactivated");//NOI18N
             shutdownRMI();
         }
     }
@@ -403,7 +403,7 @@ public class RMPlugin implements PluginSupport,RMessenger {
     }
     
     public String getId() {
-        return "RMPlugin";
+        return "RMPlugin";//NOI18N
     }
     
     public Collection getMenus() {
@@ -443,14 +443,14 @@ public class RMPlugin implements PluginSupport,RMessenger {
     private void showDialog(String message,String title){
         try{
         if(isPlugin){
-            log.debug("RMPlugin: message to plugin");
+            log.debug("RMPlugin: message to plugin");//NOI18N
             JOptionPane.showMessageDialog(context.getUserInterface().getFrame(),message,title,JOptionPane.INFORMATION_MESSAGE);
         } else {
-            log.debug("RMPlugin: message to standalone");
+            log.debug("RMPlugin: message to standalone");//NOI18N
             JOptionPane.showMessageDialog(parentFrame,message,title,JOptionPane.INFORMATION_MESSAGE);
         }
         } catch(Exception ex){
-            log.error("RMPlugin: Fehler beim anzeigen der Message ",ex);
+            log.error("RMPlugin: Error while displaying the message ",ex);//NOI18N
         }
     }
     
