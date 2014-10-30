@@ -1,4 +1,4 @@
-rm-plugin
+rm-plugin [![Build Status](http://ci.cismet.de/buildStatus/icon?job=rm-plugin)](https://ci.cismet.de/job/rm-plugin/)
 =========
 
 The remote messaging plugin enables ABF users to send messages to navigator users.
